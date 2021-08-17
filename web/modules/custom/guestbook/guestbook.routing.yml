@@ -1,0 +1,6 @@
+guest.book:
+  path: '/guestbook2'
+  defaults:
+    _controller: '\Drupal\guestbook\Controller\GuestBookController::dataGuestBook'
+  requirements:
+    _permission: 'access content'

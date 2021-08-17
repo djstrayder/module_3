@@ -1,0 +1,4 @@
+strayder-style:
+  css:
+    theme:
+      css/guestbook-style: {}
