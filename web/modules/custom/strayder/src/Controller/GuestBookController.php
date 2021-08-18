@@ -3,9 +3,10 @@
 namespace Drupal\strayder\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Database;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
 
 /**
  * Class GuestBookController.
@@ -51,85 +52,89 @@ class GuestBookController extends ControllerBase {
   /**
    * Data for table.
    */
-  public function dataGuestBook() {
-    $buildForm = $this->buildForm();
-    $query = \Drupal::database();
-    $result = $query->select('gb', 'b')
-      ->fields('b', [
-        'id',
-        'name',
-        'email',
-        'telephone',
-        'message',
-        'avatar__target_id',
-        'image__target_id',
-        'timestamp',
-      ])
-      ->orderBy('timestamp', 'DESC')
-      ->execute()->fetchAll();
-    $data = [];
+  public function load() {
+    $query = Database::getConnection()->select('gb', 'b');
+    $query->fields('b', [
+      'id',
+      'name',
+      'email',
+      'telephone',
+      'message',
+      'avatar__target_id',
+      'image__target_id',
+      'timestamp',
+    ]);
+    $result = $query
+      ->execute()
+      ->fetchAll();
+    return $result;
+  }
+
+  /**
+   * Render data.
+   */
+  public function report() {
+    \Drupal::service('page_cache_kill_switch')->trigger();
+    $form = $this->buildForm();
+    $result = $this->load();
+    $result = json_decode(json_encode($result), TRUE);
     foreach ($result as $row) {
-      $file_avatar = File::load($row->avatar__target_id);
-      if (is_null($file_avatar)) {
-        $row->avatar__target_id = '';
-        $avatar_variables = [
+      if ($row['avatar__target_id'] !== NULL) {
+        $avatar = File::load($row['avatar__target_id']);
+        $avatarUri = $avatar->getFileUri();
+        $avatarVariables = [
           '#theme' => 'image',
-          '#uri' => '/modules/custom/strayder/files/default_user.png',
-          '#width' => 100,
+          '#uri' => $avatarUri,
+          '#alt' => 'Avatar',
+          '#title' => 'Avatar',
         ];
+        $avatarUrl = file_url_transform_relative(Url::fromUri(file_create_url($avatarUri))
+          ->toString());
       }
       else {
-        $avatar_uri = $file_avatar->getFileUri();
-        $avatar_variables = [
-          '#theme' => 'image',
-          "#uri" => $avatar_uri,
-          '#alt' => 'Profile avatar',
-          '#title' => 'Profile avatar',
-          '#width' => 100,
-        ];
+        $avatarVariables = [];
+        $avatarUrl = '';
       }
-      $file_image = File::load($row->image__target_id);
-      if (!isset($file_image)) {
-        $row->image__target_id = '';
-        $image_variables = [
+      if ($row['image__target_id'] !== NULL) {
+        $image = File::load($row['image__target_id']);
+        $imageUri = $image->getFileUri();
+        $imageVariables = [
           '#theme' => 'image',
-          '#uri' => 'empty_image',
-          '#width' => 100,
+          '#uri' => $imageUri,
+          '#alt' => 'Avatar',
+          '#title' => 'Avatar',
         ];
+        $imageUrl = file_url_transform_relative(Url::fromUri(file_create_url($imageUri))
+          ->toString());
       }
       else {
-        $uri = $file_image->getFileUri();
-        $uri = file_create_url($uri);
-        $image_variables = [
-          '#theme' => 'image',
-          '#uri' => $uri,
-          '#alt' => 'Feedback image',
-          '#title' => 'Feedback image',
-          '#width' => 200,
-        ];
+        $imageVariables = [];
+        $imageUrl = '';
       }
       $data[] = [
-        'name' => $row->name,
-        'email' => $row->email,
-        'telephone' => $row->telephone,
-        'message' => $row->message,
-        'avatar' => [
-          'data' => $avatar_variables,
+        'id' => $row['id'],
+        'name' => $row['name'],
+        'email' => $row['email'],
+        'telephone' => $row['telephone'],
+        'message' => $row['message'],
+        'avatar__target_id' => [
+          'data' => $avatarVariables,
+          'url' => $avatarUrl,
         ],
-        'image' => [
-          'data' => $image_variables,
+        'image__target_id' => [
+          'data' => $imageVariables,
+          'url' => $imageUrl,
         ],
-        'timestamp' => $row->timestamp,
-        'id' => $row->id,
-        'edit' => t('Edit'),
-        'delete' => t('Delete'),
-        'uri' => isset($uri) ? $uri : '',
+        'timestamp' => $row['timestamp'],
       ];
     }
-    // Render page.
+
     return [
-      'form' => $buildForm,
-      'rows' => $data,
+      'form' => $form,
+      'posts' => [
+        '#theme' => 'guestbook',
+        '#rows' => $data,
+      ],
     ];
   }
 

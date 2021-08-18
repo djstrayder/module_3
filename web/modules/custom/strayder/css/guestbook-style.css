@@ -1,0 +1,80 @@
+.guest-book {
+  background: #e6ebf1;
+  padding: 10px;
+}
+.js-quickedit-page-title {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  text-decoration: underline;
+}
+.guestbook-content h4 {
+  text-align: center;
+  text-transform: uppercase;
+  padding: 20px 0;
+  color: #325d88;
+}
+.guestbook_header_content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+.guestbook_user {
+  background: #325d881f;
+  margin-bottom: 15px;
+}
+.guestbook_name_image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c4dbf7;
+  padding: 10px;
+  flex-direction: column;
+}
+.guestbook_name {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+.guestbook_contacts {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.guestbook_contacts a {
+  text-decoration: none;
+  color: #325d88;
+}
+.guestbook_feedback_message {
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+.guestbook_feedback {
+  background: #c4dbf7;
+  margin-bottom: 20px;
+}
+.guestbook_feedback_message div {
+  text-transform: uppercase;
+}
+.feedback_image_width {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+.guestbook_timestamp {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 10px;
+}
+.guestbook_buttons {
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: -15px;
+}
+.guest-book .js-form-required, #ajax-wrapper--3, #ajax-wrapper--4 {
+  text-transform: uppercase;
+}

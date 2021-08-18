@@ -1,4 +1,10 @@
 strayder-style:
+  version: 1.x
   css:
     theme:
-      css/guestbook-style: {}
+      css/guestbook-style.css: {}
+strayder:
+  dependencies:
+    - core/jquery
+    - core/drupal.dialog.ajax
+    - core/jquery.form

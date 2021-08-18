@@ -5,8 +5,8 @@ namespace Drupal\strayder\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\file\FileInterface;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 /**
  * Defines the str entity class.
@@ -17,7 +17,7 @@ use Drupal\file\Entity\File;
  *   handlers = {
  *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
+ *     "list_builder" = "Drupal\strayder\Controller\GuestBookController",
  *     "views_data" = "Drupal\Core\Views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\strayder\Form\GuestbookForm",
@@ -36,9 +36,9 @@ use Drupal\file\Entity\File;
  *   },
  *   links = {
  *     "add-form" = "/guestbook/add",
- *     "canonical" = "/guestbook/add",
- *     "edit-form" = "/guestbook/{guestbook}/edit",
- *     "delete-form" = "/guestbook/{guestbook}/delete",
+ *     "canonical" = "/guestbook/{guestbook}",
+ *     "edit-form" = "/admin/content/guestbook/{guestbook}",
+ *     "delete-form" = "/admin/content/guestbook/{guestbook}/delete",
  *     "collection" = "/guestbook/list",
  *   },
  *   admin_permission = "administer nodes",
@@ -54,7 +54,6 @@ class Guestbook extends ContentEntityBase {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
-      ->setTargetBundle(TRUE)
       ->setLabel('Name')
       ->setRequired(TRUE)
       ->setSetting('max_length', 100)
@@ -66,16 +65,13 @@ class Guestbook extends ContentEntityBase {
           'placeholder' => 'minimum length 2, maximum length 100',
         ],
       ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+      ]);
 
     $fields['email'] = BaseFieldDefinition::create('email')
-      ->setTargetBundle(TRUE)
       ->setLabel('Email')
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
@@ -85,18 +81,15 @@ class Guestbook extends ContentEntityBase {
           'placeholder' => 'guestbook@gmail.com',
         ],
       ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'weight' => 5,
         'settings' => [
           'placeholder' => 'guestbook@gmail.com',
         ],
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+      ]);
 
     $fields['telephone'] = BaseFieldDefinition::create('string')
-      ->setTargetBundle(TRUE)
       ->setLabel('Telephone')
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
@@ -106,18 +99,15 @@ class Guestbook extends ContentEntityBase {
           'placeholder' => 'like this +380997548675',
         ],
       ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'weight' => 10,
         'settings' => [
           'placeholder' => 'like this +380997548675',
         ],
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+      ]);
 
     $fields['message'] = BaseFieldDefinition::create('string_long')
-      ->setTargetBundle(TRUE)
       ->setLabel('Message')
       ->setDescription('Message')
       ->setRequired(TRUE)
@@ -128,30 +118,26 @@ class Guestbook extends ContentEntityBase {
           'placeholder' => 'Message',
         ],
       ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'weight' => 15,
         'settings' => [
           'placeholder' => 'Message',
         ],
-      ])
-      ->setDisplayConfigurable('view', TRUE);
+      ]);
 
     $fields['avatar'] = BaseFieldDefinition::create('image')
       ->setLabel('Your avatar')
-      ->setDescription('ONLY PNG, JPEG, JPG AND < 2MB')
+//      ->setDescription('ONLY PNG, JPEG, JPG AND < 2MB')
       ->setRequired(FALSE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
         'weight' => 20,
       ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'weight' => 20,
       ])
-      ->setDisplayConfigurable('view', TRUE)
       ->setSettings([
         'max_filesize' => '2097152',
         'upload_location' => 'public://guestbook/avatars/',
@@ -162,18 +148,16 @@ class Guestbook extends ContentEntityBase {
 
     $fields['image'] = BaseFieldDefinition::create('image')
       ->setLabel('ADDING A PICTURE TO THE REVIEW:')
-      ->setDescription('ONLY PNG, JPEG, JPG AND < 5MB')
+//      ->setDescription('ONLY PNG, JPEG, JPG AND < 5MB')
       ->setRequired(FALSE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
         'weight' => 25,
       ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
         'weight' => 25,
       ])
-      ->setDisplayConfigurable('view', TRUE)
       ->setSettings([
         'max_filesize' => '5242880',
         'upload_location' => 'public://guestbook/images/',
@@ -183,8 +167,17 @@ class Guestbook extends ContentEntityBase {
       ]);
 
     $fields['timestamp'] = BaseFieldDefinition::create('created')
-      ->setLabel('Date')
-      ->setRequired(TRUE);
+      ->setLabel(t('Created'))
+      ->setRequired(FALSE)
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'weight' => 7,
+        'type' => 'timestamp',
+        'settings' => [
+          'date_format' => 'custom',
+          'custom_date_format' => 'm/j/Y H:i:s',
+        ],
+      ]);
 
     return $fields;
   }
@@ -270,6 +263,14 @@ class Guestbook extends ContentEntityBase {
    */
   public function getTimestamp() {
     return $this->get('timestamp')->value;
+  }
+
+  /**
+   * Return data.
+   */
+  public function getTime() {
+    $time = time();
+    return $time;
   }
 
 }

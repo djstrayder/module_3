@@ -1,6 +1,7 @@
 guest.book:
   path: '/guestbook'
   defaults:
-    _controller: '\Drupal\strayder\Controller\GuestBookController::dataGuestBook'
+    _title: 'GUEST BOOK'
+    _controller: '\Drupal\strayder\Controller\GuestBookController::report'
   requirements:
     _permission: 'access content'
