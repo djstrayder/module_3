@@ -37,6 +37,9 @@
   font-size: 20px;
   text-transform: uppercase;
 }
+.guestbook_avatar img {
+  max-width: 100px;
+}
 .guestbook_contacts {
   gap: 10px;
   display: flex;
@@ -64,6 +67,9 @@
   display: flex;
   justify-content: center;
   padding-bottom: 10px;
+}
+.feedback_image_width img {
+  max-width: 200px;
 }
 .guestbook_timestamp {
   display: flex;

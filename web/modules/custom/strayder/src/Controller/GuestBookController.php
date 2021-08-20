@@ -56,6 +56,7 @@ class GuestBookController extends ControllerBase {
     $query = Database::getConnection()->select('gb', 'b');
     $query->fields('b', [
       'id',
+      'uuid',
       'name',
       'email',
       'telephone',
@@ -65,6 +66,7 @@ class GuestBookController extends ControllerBase {
       'timestamp',
     ]);
     $result = $query
+      ->orderBy('timestamp', 'DESC')
       ->execute()
       ->fetchAll();
     return $result;
@@ -78,6 +80,7 @@ class GuestBookController extends ControllerBase {
     $form = $this->buildForm();
     $result = $this->load();
     $result = json_decode(json_encode($result), TRUE);
+    $data = [];
     foreach ($result as $row) {
       if ($row['avatar__target_id'] !== NULL) {
         $avatar = File::load($row['avatar__target_id']);
@@ -134,6 +137,7 @@ class GuestBookController extends ControllerBase {
       'posts' => [
         '#theme' => 'guestbook',
         '#rows' => $data,
+
       ],
     ];
   }

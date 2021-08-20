@@ -10,10 +10,10 @@
           </div>
           <div class="guestbook_user_data">
             <div class="guestbook_avatar">
-              {% if row.avatar.data is null %}
-                <img src="/modules/custom/strayder/files/default_user.png" alt="default_user_image" width="100" height="100">
+              {% if row.avatar__target_id.data %}
+                  <img src="{{ row.avatar__target_id.url }}" alt="avatar">
               {% else %}
-                {{ row.avatar__target_id }}
+                  <img src="modules/custom/strayder/files/default_user.png" alt="default_user">
               {% endif %}
             </div>
             <div class="guestbook_timestamp">
@@ -37,9 +37,11 @@
           {{ row.message }}
         </div>
         <div class="guestbook_feedback_image">
-          {% if row.uri %}
+          {% if row.image__target_id.data %}
             <div class="feedback_image_width">
-              <a href="{{ row.uri }}" target="_blank" >{{ row.image }}</a>
+                <a href="{{ row.image__target_id.url }}"  target="_blank" >
+                  <img src="{{ row.image__target_id.url }}" alt="image">
+                </a>
             </div>
           {% endif %}
         </div>
@@ -48,8 +50,8 @@
     </div>
     {% if user.hasPermission('administer nodes') %}
       <div class="guestbook_buttons">
-        <a href="/guest_book/guestbook-edit/{{ row.id }}" class="use-ajax guestbook-edit" data-dialog-type="modal">{{ row.edit }}</a>
-        <a href="/guest_book/guestbook-delete/{{ row.id }}" class="use-ajax guestbook-delete" data-dialog-type="modal">{{ row.delete }}</a>
+        <a href="/guestbook/edit/{{ row.id }}" class="use-ajax guestbook-edit" data-dialog-type="modal">{{ 'Edit' |trans }}</a>
+        <a href="/guestbook/delete/{{ row.id }}" class="use-ajax guestbook-delete" data-dialog-type="modal">{{ 'Delete'|trans }}</a>
       </div>
     {% endif %}
   {% endfor %}

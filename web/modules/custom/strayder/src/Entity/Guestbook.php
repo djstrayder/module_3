@@ -21,7 +21,7 @@ use Drupal\file\FileInterface;
  *     "views_data" = "Drupal\Core\Views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\strayder\Form\GuestbookForm",
- *       "edit" = "Drupal\strayder\Form\GuestbookFrom",
+ *       "edit" = "Drupal\strayder\Form\GuestbookForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
  *     },
  *     "permission_provider" = "Drupal\Core\Entity\EntityPermissionProvider",
@@ -37,9 +37,8 @@ use Drupal\file\FileInterface;
  *   links = {
  *     "add-form" = "/guestbook/add",
  *     "canonical" = "/guestbook/{guestbook}",
- *     "edit-form" = "/admin/content/guestbook/{guestbook}",
- *     "delete-form" = "/admin/content/guestbook/{guestbook}/delete",
- *     "collection" = "/guestbook/list",
+ *     "edit-form" = "/guestbook/edit/{guestbook}",
+ *     "delete-form" = "/guestbook/delete/{guestbook}",
  *   },
  *   admin_permission = "administer nodes",
  * )
@@ -60,15 +59,16 @@ class Guestbook extends ContentEntityBase {
       ->setSetting('min_length', 2)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -5,
+        'weight' => 10,
         'settings' => [
           'placeholder' => 'minimum length 2, maximum length 100',
         ],
       ])
+      ->addConstraint('NameValidateAjax')
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
-        'weight' => -5,
+        'weight' => 10,
       ]);
 
     $fields['email'] = BaseFieldDefinition::create('email')
@@ -76,14 +76,15 @@ class Guestbook extends ContentEntityBase {
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
-        'weight' => 5,
+        'weight' => 20,
         'settings' => [
           'placeholder' => 'guestbook@gmail.com',
         ],
       ])
+      ->addConstraint('EmailValidateAjax')
       ->setDisplayOptions('view', [
         'label' => 'inline',
-        'weight' => 5,
+        'weight' => 20,
         'settings' => [
           'placeholder' => 'guestbook@gmail.com',
         ],
@@ -94,14 +95,15 @@ class Guestbook extends ContentEntityBase {
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
-        'weight' => 10,
+        'weight' => 30,
         'settings' => [
           'placeholder' => 'like this +380997548675',
         ],
       ])
+      ->addConstraint('TelephoneValidateAjax')
       ->setDisplayOptions('view', [
         'label' => 'inline',
-        'weight' => 10,
+        'weight' => 30,
         'settings' => [
           'placeholder' => 'like this +380997548675',
         ],
@@ -113,14 +115,14 @@ class Guestbook extends ContentEntityBase {
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
-        'weight' => 15,
+        'weight' => 40,
         'settings' => [
           'placeholder' => 'Message',
         ],
       ])
       ->setDisplayOptions('view', [
         'label' => 'inline',
-        'weight' => 15,
+        'weight' => 40,
         'settings' => [
           'placeholder' => 'Message',
         ],
@@ -132,11 +134,11 @@ class Guestbook extends ContentEntityBase {
       ->setRequired(FALSE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
-        'weight' => 20,
+        'weight' => 50,
       ])
       ->setDisplayOptions('view', [
         'label' => 'inline',
-        'weight' => 20,
+        'weight' => 50,
       ])
       ->setSettings([
         'max_filesize' => '2097152',
@@ -152,11 +154,11 @@ class Guestbook extends ContentEntityBase {
       ->setRequired(FALSE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
-        'weight' => 25,
+        'weight' => 60,
       ])
       ->setDisplayOptions('view', [
         'label' => 'inline',
-        'weight' => 25,
+        'weight' => 60,
       ])
       ->setSettings([
         'max_filesize' => '5242880',
