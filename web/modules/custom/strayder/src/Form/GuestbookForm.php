@@ -138,8 +138,8 @@ class GuestbookForm extends ContentEntityForm {
       '%entity' => $entity->label(),
       'link' => $entity->toLink($this->t('View'), 'canonical')->toString(),
     ];
-    $this->logger($entity->getEntityTypeId())->notice('Form was submited', $arguments);
-    $this->messenger()->addStatus($this->t('The file was saved.', $arguments));
+    $this->logger($entity->getEntityTypeId())->notice('Your form has been submitted', $arguments);
+    $this->messenger()->addStatus($this->t('Successfully.', $arguments));
     $form_state->setRedirectUrl(Url::fromRoute('guest.book'));
   }
 

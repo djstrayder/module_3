@@ -2,6 +2,6 @@ guest.book:
   path: '/guestbook'
   defaults:
     _title: 'GUEST BOOK'
-    _controller: '\Drupal\strayder\Controller\GuestBookController::report'
+    _controller: '\Drupal\strayder\Controller\GuestBookController::dataGuestBook'
   requirements:
     _permission: 'access content'

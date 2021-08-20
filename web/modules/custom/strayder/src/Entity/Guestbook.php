@@ -5,11 +5,9 @@ namespace Drupal\strayder\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\file\Entity\File;
-use Drupal\file\FileInterface;
 
 /**
- * Defines the str entity class.
+ * Defines the strayder entity class.
  *
  * @ContentEntityType(
  *   id = "guestbook",
@@ -130,14 +128,16 @@ class Guestbook extends ContentEntityBase {
 
     $fields['avatar'] = BaseFieldDefinition::create('image')
       ->setLabel('Your avatar')
-//      ->setDescription('ONLY PNG, JPEG, JPG AND < 2MB')
+      ->setDescription('ONLY PNG, JPEG, JPG AND < 2MB')
       ->setRequired(FALSE)
       ->setDisplayOptions('form', [
-        'label' => 'inline',
+        'label' => 'above',
+        'type' => 'string',
         'weight' => 50,
       ])
       ->setDisplayOptions('view', [
-        'label' => 'inline',
+        'label' => 'hidden',
+        'type' => 'string',
         'weight' => 50,
       ])
       ->setSettings([
@@ -150,7 +150,6 @@ class Guestbook extends ContentEntityBase {
 
     $fields['image'] = BaseFieldDefinition::create('image')
       ->setLabel('ADDING A PICTURE TO THE REVIEW:')
-//      ->setDescription('ONLY PNG, JPEG, JPG AND < 5MB')
       ->setRequired(FALSE)
       ->setDisplayOptions('form', [
         'label' => 'inline',
@@ -182,97 +181,6 @@ class Guestbook extends ContentEntityBase {
       ]);
 
     return $fields;
-  }
-
-  /**
-   * Return name.
-   */
-  public function getName() {
-    return $this->get('name')->value;
-  }
-
-  /**
-   * Return email.
-   */
-  public function getEmail() {
-    return $this->get('email')->value;
-  }
-
-  /**
-   * Return telephone.
-   */
-  public function getTelephone() {
-    return $this->get('telephone')->value;
-  }
-
-  /**
-   * Return message.
-   */
-  public function getMessage() {
-    return $this->get('message')->value;
-  }
-
-  /**
-   * Return avatar.
-   */
-  public function getAvatar() {
-    $avatar = [];
-    $avatarId = $this->get('avatar')->target_id;
-    if (isset($avatarId)) {
-      $avatarFile = File::load($avatarId);
-      if ($avatarFile instanceof FileInterface) {
-        $avatar = [
-          '#type' => 'image',
-          '#uri' => $avatarFile->getFileUri(),
-          '#width' => 100,
-        ];
-        $renderer = \Drupal::service('renderer');
-        $avatar = $renderer->render($avatar);
-      }
-    }
-    else {
-      $avatar = '{no avatar}';
-    }
-    return $avatar;
-  }
-
-  /**
-   * Return image.
-   */
-  public function getImage() {
-    $image = [];
-    $imageId = $this->get('image')->target_id;
-    if (isset($imageId)) {
-      $imageFile = File::load($imageId);
-      if ($imageFile instanceof FileInterface) {
-        $image = [
-          '#type' => 'image',
-          '#uri' => $imageFile->getFileUri(),
-          '#width' => 200,
-        ];
-        $renderer = \Drupal::service('renderer');
-        $image = $renderer->render($image);
-      }
-    }
-    else {
-      $image = '{no image}';
-    }
-    return $image;
-  }
-
-  /**
-   * Return data.
-   */
-  public function getTimestamp() {
-    return $this->get('timestamp')->value;
-  }
-
-  /**
-   * Return data.
-   */
-  public function getTime() {
-    $time = time();
-    return $time;
   }
 
 }

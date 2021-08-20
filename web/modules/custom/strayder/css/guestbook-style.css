@@ -1,18 +1,25 @@
+#block-strayder-theme-content {
+  background: #c7c7c7;
+  padding: 20px;
+}
+
 .guest-book {
   background: #e6ebf1;
   padding: 10px;
 }
-.js-quickedit-page-title {
+
+#block-strayder-theme-page-title {
   display: flex;
   justify-content: center;
   padding: 20px 0;
   text-decoration: underline;
+  color: #0d6efd;
 }
 .guestbook-content h4 {
   text-align: center;
   text-transform: uppercase;
   padding: 20px 0;
-  color: #325d88;
+  color: #0c6efd;
 }
 .guestbook_header_content {
   display: flex;
@@ -22,7 +29,7 @@
   padding-bottom: 10px;
 }
 .guestbook_user {
-  background: #325d881f;
+  background: #e9ecef;
   margin-bottom: 15px;
 }
 .guestbook_name_image {
@@ -57,7 +64,7 @@
   font-size: 16px;
 }
 .guestbook_feedback {
-  background: #c4dbf7;
+  background: #e9ecef;
   margin-bottom: 20px;
 }
 .guestbook_feedback_message div {

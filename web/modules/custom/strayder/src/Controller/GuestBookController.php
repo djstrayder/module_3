@@ -26,6 +26,8 @@ class GuestBookController extends ControllerBase {
   protected $entityBuild;
 
   /**
+   * Creates a form of entity.
+   *
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -75,8 +77,7 @@ class GuestBookController extends ControllerBase {
   /**
    * Render data.
    */
-  public function report() {
-    \Drupal::service('page_cache_kill_switch')->trigger();
+  public function dataGuestBook() {
     $form = $this->buildForm();
     $result = $this->load();
     $result = json_decode(json_encode($result), TRUE);
